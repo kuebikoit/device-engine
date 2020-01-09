@@ -2,6 +2,7 @@ package com.kuebikoit.deviceengine.controller;
 
 import com.kuebikoit.deviceengine.persistence.model.Device;
 import com.kuebikoit.deviceengine.persistence.repository.DeviceRepository;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class DeviceController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void load(@RequestBody Device device) {
+    public void load(@RequestBody @Valid Device device) {
         log.info("Post endpoint invoked");
 
         deviceRepository.save(device);
