@@ -8,6 +8,8 @@ import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +36,7 @@ public class DeviceController {
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void load(@RequestBody @Valid Device device) {
-        log.info("Post endpoint invoked");
+        log.info("Post endpoint invoked principal={}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
         deviceRepository.save(device);
     }
@@ -79,6 +81,5 @@ public class DeviceController {
 
         return deviceRepository.save(deviceToUpdate);
     }
-
 
 }
