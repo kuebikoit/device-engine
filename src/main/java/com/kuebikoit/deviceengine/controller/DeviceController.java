@@ -3,14 +3,20 @@ package com.kuebikoit.deviceengine.controller;
 import com.kuebikoit.deviceengine.exception.DeviceNotFoundException;
 import com.kuebikoit.deviceengine.persistence.model.Device;
 import com.kuebikoit.deviceengine.persistence.repository.DeviceRepository;
+import java.util.List;
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/devices")
@@ -56,23 +62,29 @@ public class DeviceController {
         log.info("Delete by id endpoint invoked id={}", id);
         String exceptionMessage = String.format("Device not found for id=%s", id);
 
-        Device deviceToRemove = deviceRepository.findById(id)
+        deviceRepository.findById(id)
             .orElseThrow(() -> new DeviceNotFoundException(exceptionMessage));
 
-        deviceRepository.delete(deviceToRemove);
+        deviceRepository.deleteById(id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Device updateDevice(@RequestBody Device device, @PathVariable Long id) {
+    public Device updateDevice(@RequestBody Device newDevice, @PathVariable Long id) {
         log.info("Delete by id endpoint invoked id={}", id);
-        String exceptionMessage = String.format("Device not found for id=%s", id);
 
-        Device deviceToUpdate = deviceRepository.findById(id)
-            .orElseThrow(() -> new DeviceNotFoundException(exceptionMessage));
+        return deviceRepository.findById(id)
+            .map(device -> {
+                device.setHostname(newDevice.getHostname());
+                device.setIp(newDevice.getIp());
 
+                return deviceRepository.save(device);
+            })
+            .orElseGet(() -> {
+                newDevice.setId(id);
 
-        return deviceRepository.save(deviceToUpdate);
+                return deviceRepository.save(newDevice);
+            });
     }
 
 
