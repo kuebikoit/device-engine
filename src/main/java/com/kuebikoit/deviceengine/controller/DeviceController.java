@@ -1,14 +1,20 @@
 package com.kuebikoit.deviceengine.controller;
 
+import com.kuebikoit.deviceengine.controller.model.BatchLoad;
 import com.kuebikoit.deviceengine.exception.DeviceNotFoundException;
 import com.kuebikoit.deviceengine.persistence.model.Device;
 import com.kuebikoit.deviceengine.persistence.repository.DeviceRepository;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,19 +32,43 @@ import org.springframework.web.bind.annotation.RestController;
 public class DeviceController {
 
     private final DeviceRepository deviceRepository;
+    private final ExecutorService maxLoadExecutorService;
 
     @Autowired
-    public DeviceController(DeviceRepository deviceRepository) {
+    public DeviceController(DeviceRepository deviceRepository,
+        @Qualifier("maxLoadExService") ExecutorService maxLoadExecutorService) {
+
+        this.maxLoadExecutorService = maxLoadExecutorService;
         log.debug("{} constructor invoked by Spring", this.getClass().getName());
         this.deviceRepository = deviceRepository;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void load(@RequestBody @Valid Device device) {
-        log.info("Post endpoint invoked principal={}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    public void load(@RequestBody @Valid BatchLoad batchLoad) {
+        log.info("Post endpoint invoked principal={}",
+            SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
-        deviceRepository.save(device);
+//        Runnable r = () -> batchLoad
+//            .getDevices().stream()
+//            .forEach(d -> deviceRepository.save(d));
+
+        Supplier<List<Device>> s = () ->
+           batchLoad
+                .getDevices().stream()
+                .map(deviceRepository::save)
+                .collect(Collectors.toList());
+
+
+        //CompletableFuture.runAsync(r, maxLoadExecutorService);
+
+        //get batch request id
+
+        CompletableFuture.supplyAsync(s, maxLoadExecutorService);
+
+//        batchLoad.getDevices()
+//            .parallelStream()
+//            .forEach(d -> deviceRepository.save(d));
     }
 
     @GetMapping

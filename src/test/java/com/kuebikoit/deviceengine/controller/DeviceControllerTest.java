@@ -1,7 +1,10 @@
 package com.kuebikoit.deviceengine.controller;
 
+import com.kuebikoit.deviceengine.controller.model.BatchLoad;
 import com.kuebikoit.deviceengine.persistence.model.Device;
 import com.kuebikoit.deviceengine.persistence.repository.DeviceRepository;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -31,7 +34,7 @@ public class DeviceControllerTest {
         //AAA -> Arrange Act Assert -> Given When Then
         Device d = Device.builder().ip("ip").build();
 
-        controllerUnderTest.load(d);
+        controllerUnderTest.load(new BatchLoad().setDevices(Arrays.asList(d)));
 
         verify(deviceRepositoryMock, only()).save(d);
     }
@@ -42,7 +45,7 @@ public class DeviceControllerTest {
         String hostname = UUID.randomUUID().toString();
         Device d = Device.builder().hostname(hostname).build();
 
-        controllerUnderTest.load(d);
+        controllerUnderTest.load(new BatchLoad().setDevices(Arrays.asList(d)));
 
         verify(deviceRepositoryMock, only()).save(deviceArgumentCaptor.capture());
 

@@ -21,5 +21,6 @@ public class TstCal {
         Tst tst = new Tst();
 
         tst.jpt();
+        tst.print("ghh");
     }
 }
