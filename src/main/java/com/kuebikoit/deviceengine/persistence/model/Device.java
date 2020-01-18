@@ -29,19 +29,20 @@ import org.hibernate.annotations.UpdateTimestamp;
 @AllArgsConstructor
 public class Device implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @EqualsAndHashCode.Include
-    @NotEmpty
-    private String hostname;
-    @NotEmpty
-    private String ip;
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lasUpdateDate;
-    private String vulnerability;
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
+
+  @EqualsAndHashCode.Include @NotEmpty private String hostname;
+  @NotEmpty private String ip;
+
+  @UpdateTimestamp
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date lasUpdateDate;
+
+  private String vulnerability;
+
+  @CreationTimestamp
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date createdDate;
 }

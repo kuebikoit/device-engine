@@ -7,14 +7,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
-    private final Interceptor interceptor;
+  private final Interceptor interceptor;
 
-    public InterceptorConfig(Interceptor interceptor) {
-        this.interceptor = interceptor;
-    }
+  public InterceptorConfig(Interceptor interceptor) {
+    this.interceptor = interceptor;
+  }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(interceptor);
-    }
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(interceptor);
+  }
 }

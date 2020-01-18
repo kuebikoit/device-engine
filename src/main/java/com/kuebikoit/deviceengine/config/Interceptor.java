@@ -1,30 +1,29 @@
 package com.kuebikoit.deviceengine.config;
 
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 @Slf4j
 @Configuration
 public class Interceptor extends HandlerInterceptorAdapter {
 
-    @Override
-    public boolean preHandle(HttpServletRequest requestServlet, HttpServletResponse responseServlet, Object handler) throws Exception {
-        log.info("MINIMAL: INTERCEPTOR PREHANDLE CALLED");
+  @Override
+  public boolean preHandle(
+      HttpServletRequest requestServlet, HttpServletResponse responseServlet, Object handler)
+      throws Exception {
 
-        return true;
-    }
+    var user = Optional.ofNullable(SecurityContextHolder.getContext())
+        .map(c -> c.getAuthentication())
+        .map(a -> a.getPrincipal())
+        .orElse("NONE");
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("MINIMAL: INTERCEPTOR POSTHANDLE CALLED");
-    }
+    log.info("Logged in user={}", user);
 
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) throws Exception {
-        log.info("MINIMAL: INTERCEPTOR AFTERCOMPLETION CALLED");
-    }
+    return true;
+  }
 }

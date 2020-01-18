@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class DeviceService {
 
-    private final DeviceRepository deviceRepository;
+  private final DeviceRepository deviceRepository;
 
-    @Autowired
-    public DeviceService(DeviceRepository deviceRepository) {
-        log.debug("********Service constructor invoked by Spring******");
-        this.deviceRepository = deviceRepository;
-    }
+  @Autowired
+  public DeviceService(DeviceRepository deviceRepository) {
+    log.debug("********Service constructor invoked by Spring******");
+    this.deviceRepository = deviceRepository;
+  }
 }

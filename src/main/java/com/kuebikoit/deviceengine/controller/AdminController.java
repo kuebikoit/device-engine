@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class AdminController {
 
-    @GetMapping
-    public String admin() {
-        log.info("admin endpoint invoked");
+  @GetMapping
+  public String admin() {
+    log.info("admin endpoint invoked");
 
-        return "SUCCESS";
-    }
-
+    return "SUCCESS";
+  }
 }

@@ -12,6 +12,5 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class BatchLoad {
 
-    private List<Device> devices = new ArrayList<>();
-
+  private List<Device> devices = new ArrayList<>();
 }
