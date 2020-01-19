@@ -6,7 +6,47 @@
 	},
 	"item": [
 		{
-			"name": "Load device",
+			"name": "GET",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "894a24f7-3e9e-4c38-8ae7-c1adc26c2378",
+						"exec": [
+							"pm.test(\"Post status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"///empty test for ",
+							"",
+							"pm.test(\"Check if array is empty\", function () {",
+							"    var data = pm.response.json()",
+							"    console.log(\"json = \", pm.response.json())",
+							"     pm.expect(data).to.be.empty",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8090/devices",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"devices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST",
 			"event": [
 				{
 					"listen": "test",
@@ -55,7 +95,7 @@
 			"response": []
 		},
 		{
-			"name": "Retrieve loaded device",
+			"name": "GET after POST",
 			"event": [
 				{
 					"listen": "test",
@@ -66,13 +106,10 @@
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"let counter = 0;",
 							"pm.test(\"Check if array is empty\", function () {",
 							"    var data = pm.response.json()",
-							"    pm.expect(data.length).to.be.above(0)",
-							"    counter = data.length-1;",
-							"    console.log(\"setting id = \", data[counter].id)",
-							"    pm.collectionVariables.set(\"device_id\", data[counter].id);",
+							"    console.log(\"json = \", pm.response.json())",
+							"     pm.expect(data.length).to.be.above(0)",
 							"});"
 						],
 						"type": "text/javascript"
@@ -94,214 +131,6 @@
 				}
 			},
 			"response": []
-		},
-		{
-			"name": "Retrieve loaded device by id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "894a24f7-3e9e-4c38-8ae7-c1adc26c2378",
-						"exec": [
-							"pm.test(\"Post status test\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"pm.test(\"Validate result\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.hostname).to.eql(\"test\");",
-							"    pm.expect(jsonData.ip).to.eql(\"test_ip\");",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8090/devices/{{device_id}}",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"devices",
-						"{{device_id}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update device",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "e65dd37a-a05f-4874-b781-d1ff6a730fe3",
-						"exec": [
-							"pm.test(\"Post status test\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"pm.test(\"Validate result\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.hostname).to.eql(\"test1\");",
-							"    pm.expect(jsonData.ip).to.eql(\"test_ip1\");",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"hostname\": \"test1\",\n\t\"ip\": \"test_ip1\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8090/devices/{{device_id}}",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"devices",
-						"{{device_id}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Remove device",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "054792eb-227f-4812-94e2-524c9b23da25",
-						"exec": [
-							"pm.test(\"Post status test\", function () {",
-							"    pm.response.to.have.status(204);",
-							"});",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "localhost:8090/devices/{{device_id}}",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"devices",
-						"{{device_id}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Retrieve deleted device",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "894a24f7-3e9e-4c38-8ae7-c1adc26c2378",
-						"exec": [
-							"pm.test(\"Get status test\", function () {",
-							"    pm.response.to.have.status(404);",
-							"});",
-							"",
-							"pm.test(\"Validate result\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.error).to.eql(\"Not Found\");",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8090/devices/{{device_id}}",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"devices",
-						"{{device_id}}"
-					]
-				}
-			},
-			"response": []
-		}
-	],
-	"auth": {
-		"type": "oauth2",
-		"oauth2": [
-			{
-				"key": "accessToken",
-				"value": "1bf908f3-b0b0-41e4-b874-4744f1d18aa0",
-				"type": "string"
-			},
-			{
-				"key": "tokenType",
-				"value": "bearer",
-				"type": "string"
-			},
-			{
-				"key": "addTokenTo",
-				"value": "header",
-				"type": "string"
-			}
-		]
-	},
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"id": "3e21434f-202e-44f1-9300-cf0f9b587ab8",
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"id": "f690c784-dee9-4faf-a38a-9a61f9e71f45",
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
 		}
 	],
 	"protocolProfileBehavior": {}
