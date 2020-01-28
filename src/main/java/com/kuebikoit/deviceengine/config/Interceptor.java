@@ -17,10 +17,11 @@ public class Interceptor extends HandlerInterceptorAdapter {
       HttpServletRequest requestServlet, HttpServletResponse responseServlet, Object handler)
       throws Exception {
 
-    var user = Optional.ofNullable(SecurityContextHolder.getContext())
-        .map(c -> c.getAuthentication())
-        .map(a -> a.getPrincipal())
-        .orElse("NONE");
+    var user =
+        Optional.ofNullable(SecurityContextHolder.getContext())
+            .map(c -> c.getAuthentication())
+            .map(a -> a.getPrincipal())
+            .orElse("NONE");
 
     log.info("Logged in user={}", user);
 
