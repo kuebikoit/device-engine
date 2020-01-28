@@ -1,13 +1,23 @@
 package com.kuebikoit.deviceengine.persistence.model;
 
-import javax.validation.constraints.NotEmpty;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Getter
@@ -19,19 +29,20 @@ import java.util.Date;
 @AllArgsConstructor
 public class Device implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @EqualsAndHashCode.Include
-    @NotEmpty
-    private String hostname;
-    @NotEmpty
-    private String ip;
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lasUpdateDate;
-    private String vulnerability;
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
+
+  @EqualsAndHashCode.Include @NotEmpty private String hostname;
+  @NotEmpty private String ip;
+
+  @UpdateTimestamp
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date lasUpdateDate;
+
+  private String vulnerability;
+
+  @CreationTimestamp
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date createdDate;
 }
