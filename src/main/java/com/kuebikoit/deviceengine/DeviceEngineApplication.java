@@ -19,5 +19,4 @@ public class DeviceEngineApplication {
   public void init() {
     TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
   }
-
 }

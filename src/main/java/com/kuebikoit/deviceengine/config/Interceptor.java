@@ -14,8 +14,7 @@ public class Interceptor extends HandlerInterceptorAdapter {
 
   @Override
   public boolean preHandle(
-      HttpServletRequest requestServlet, HttpServletResponse responseServlet, Object handler)
-      throws Exception {
+      HttpServletRequest requestServlet, HttpServletResponse responseServlet, Object handler) {
 
     var user =
         Optional.ofNullable(SecurityContextHolder.getContext())

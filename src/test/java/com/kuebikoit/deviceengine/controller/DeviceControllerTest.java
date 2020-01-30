@@ -6,10 +6,9 @@ import static org.mockito.Mockito.*;
 import com.kuebikoit.deviceengine.controller.model.BatchLoad;
 import com.kuebikoit.deviceengine.persistence.model.Device;
 import com.kuebikoit.deviceengine.persistence.repository.DeviceRepository;
-import java.util.Arrays;
+import com.kuebikoit.deviceengine.service.DeviceService;
+import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -19,22 +18,22 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-@Ignore
 public class DeviceControllerTest {
 
   @Mock private DeviceRepository deviceRepositoryMock;
-  @Mock private ExecutorService executorServiceMock;
-  @Captor private ArgumentCaptor<Device> deviceArgumentCaptor;
+  @Mock private DeviceService deviceServiceMock;
+  @Captor private ArgumentCaptor<BatchLoad> batchLoadArgumentCaptor;
   @InjectMocks private DeviceController controllerUnderTest;
 
   @Test
   public void verifySaveOnload() {
     // AAA -> Arrange Act Assert -> Given When Then
     Device d = Device.builder().ip("ip").build();
+    var batchLoad = new BatchLoad().setDevices(List.of(d));
 
-    controllerUnderTest.load(new BatchLoad().setDevices(Arrays.asList(d)));
+    controllerUnderTest.load(batchLoad);
 
-    verify(deviceRepositoryMock, only()).save(d);
+    verify(deviceServiceMock, only()).load(batchLoad);
   }
 
   @Test
@@ -43,11 +42,11 @@ public class DeviceControllerTest {
     String hostname = UUID.randomUUID().toString();
     Device d = Device.builder().hostname(hostname).build();
 
-    controllerUnderTest.load(new BatchLoad().setDevices(Arrays.asList(d)));
+    controllerUnderTest.load(new BatchLoad().setDevices(List.of(d)));
 
-    verify(deviceRepositoryMock, only()).save(deviceArgumentCaptor.capture());
+    verify(deviceServiceMock, only()).load(batchLoadArgumentCaptor.capture());
 
-    assertThat(deviceArgumentCaptor.getValue().getHostname())
+    assertThat(batchLoadArgumentCaptor.getValue().getDevices().get(0).getHostname())
         .as("verify hostname matches")
         .isEqualTo(hostname);
   }

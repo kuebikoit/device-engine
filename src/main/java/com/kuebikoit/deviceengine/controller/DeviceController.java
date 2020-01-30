@@ -1,18 +1,13 @@
 package com.kuebikoit.deviceengine.controller;
 
-import static com.kuebikoit.deviceengine.config.ExecutorServiceConfig.MAX_EXECUTOR_SERVICE;
-
 import com.kuebikoit.deviceengine.controller.model.BatchLoad;
 import com.kuebikoit.deviceengine.exception.DeviceNotFoundException;
 import com.kuebikoit.deviceengine.persistence.model.Device;
 import com.kuebikoit.deviceengine.persistence.repository.DeviceRepository;
+import com.kuebikoit.deviceengine.service.DeviceService;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,15 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class DeviceController {
 
+  private final DeviceService deviceService;
   private final DeviceRepository deviceRepository;
-  private final ExecutorService maxLoadExecutorService;
 
-  @Autowired
-  public DeviceController(
-      DeviceRepository deviceRepository,
-      @Qualifier(MAX_EXECUTOR_SERVICE) ExecutorService maxLoadExecutorService) {
-    this.maxLoadExecutorService = maxLoadExecutorService;
-    log.debug("{} constructor invoked by Spring", this.getClass().getName());
+  public DeviceController(DeviceService deviceService, DeviceRepository deviceRepository) {
+    this.deviceService = deviceService;
     this.deviceRepository = deviceRepository;
   }
 
@@ -46,11 +37,7 @@ public class DeviceController {
   public void load(@RequestBody @Valid BatchLoad batchLoad) {
     log.info("Post endpoint invoked");
 
-    batchLoad
-        .getDevices()
-        .forEach(
-            d ->
-                CompletableFuture.runAsync(() -> deviceRepository.save(d), maxLoadExecutorService));
+    this.deviceService.load(batchLoad);
   }
 
   @GetMapping
