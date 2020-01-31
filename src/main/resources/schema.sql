@@ -1,8 +1,0 @@
-CREATE TABLE IF NOT EXISTS device (
-  id INT,
-  hostname VARCHAR(45) NOT NULL,
-  ip VARCHAR(45),
-  last_updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  vulnerability VARCHAR(45) NOT NULL,
-  PRIMARY KEY (id)
-);

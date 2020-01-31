@@ -2,6 +2,9 @@
 
 ![Alt text](design.png?raw=true "Title")
 
+## Create docker mysql container
+```docker run -p 3306:3306 --name=mysql57 -e MYSQL_ROOT_PASSWORD=pwd -d mysql:latest```
+
 ## Running the app
 ```mvn spring-boot:run -Dspring-boot.run.profiles=<profile>```
 

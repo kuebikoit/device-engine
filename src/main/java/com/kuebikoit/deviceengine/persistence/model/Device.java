@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,9 +36,11 @@ public class Device implements Serializable {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @EqualsAndHashCode.Include @NotEmpty
+  @EqualsAndHashCode.Include
+  @NotEmpty
   @Column(unique = true)
   private String hostname;
+
   @NotEmpty private String ip;
 
   @UpdateTimestamp
@@ -46,7 +49,7 @@ public class Device implements Serializable {
 
   private String vulnerability;
 
-  @Enumerated
+  @Enumerated(EnumType.STRING)
   private DeviceStatus status;
 
   @CreationTimestamp
